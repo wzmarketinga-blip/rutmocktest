@@ -22,49 +22,55 @@ function MockTest() {
     loadQuestions();
   }, []);
 
-  async function loadQuestions() {
-    try {
-      const data = await getQuestions();
+async function loadQuestions() {
+  try {
+    const data = await getQuestions();
 
-      if (selectedSubject === "Mixed") {
-        const subjects = [
-          "Computer",
-          "English",
-          "Reasoning",
-          "Math",
-          "GK",
-        ];
+    if (selectedSubject === "Mixed") {
+      const subjects = [
+        "Computer",
+        "English",
+        "Reasoning",
+        "Math",
+        "GK",
+      ];
 
-        let finalQuestions = [];
+      let finalQuestions = [];
 
-        subjects.forEach((subject) => {
-          const subjectQuestions = data
-            .filter((q) => q.subject === subject)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 10);
-
-          finalQuestions.push(...subjectQuestions);
-        });
-
-        finalQuestions.sort(() => Math.random() - 0.5);
-
-        setQuestions(finalQuestions);
-      } else {
-        const filteredQuestions = data
-          .filter((q) => q.subject === selectedSubject)
+      subjects.forEach((subject) => {
+        const subjectQuestions = data
+          .filter((q) => q.subject === subject)
           .sort(() => Math.random() - 0.5)
-          .slice(0, 50);
+          .slice(0, 10);
 
-        setQuestions(filteredQuestions);
-      }
+        finalQuestions.push(...subjectQuestions);
+      });
 
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      alert("Questions Load Error");
+      finalQuestions.sort(() => Math.random() - 0.5);
+
+      setQuestions(finalQuestions);
+    } else {
+      const filteredQuestions = data
+        .filter((q) => q.subject === selectedSubject)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 50);
+
+      setQuestions(filteredQuestions);
     }
-  }
 
+    setLoading(false);
+
+  } catch (error) {
+    console.error(error);
+
+    alert(
+      "Questions Load Error\n\n" +
+      error.name +
+      "\n" +
+      error.message
+    );
+  }
+}
   if (loading) {
     return (
       <div

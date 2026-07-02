@@ -6,17 +6,17 @@ export async function getQuestions() {
   const data = await response.json();
 
   return data.map((q) => ({
-    id: q.ID,
-    subject: (q.Subject || "").trim(),
-    question: (q.Question || "").trim(),
+    id: String(q.ID ?? ""),
+    subject: String(q.Subject ?? "").trim(),
+    question: String(q.Question ?? "").trim(),
 
     options: [
-      (q.A || "").trim(),
-      (q.B || "").trim(),
-      (q.C || "").trim(),
-      (q.D || "").trim(),
+      String(q.A ?? "").trim(),
+      String(q.B ?? "").trim(),
+      String(q.C ?? "").trim(),
+      String(q.D ?? "").trim(),
     ],
 
-    answer: (q.Answer || "").trim().toUpperCase(),
+    answer: String(q.Answer ?? "").trim().toUpperCase(),
   }));
 }
