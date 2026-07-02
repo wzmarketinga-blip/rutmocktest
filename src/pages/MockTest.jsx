@@ -239,5 +239,4 @@ const handleSubmit = () => {
 }}>
   Build by RUT Agency (Abhishek Kumar)
 </div>
-
 export default MockTest;

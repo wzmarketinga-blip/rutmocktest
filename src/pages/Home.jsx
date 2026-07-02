@@ -156,16 +156,4 @@ const startMock = async () => {
 }
 
 
-<div style={{
-  position: "fixed",
-  bottom: "10px",
-  width: "100%",
-  textAlign: "center",
-  color: "#facc15",
-  fontWeight: "bold",
-  fontSize: "14px"
-}}>
-  🚀 Build by RUT Agency (Abhishek Kumar)
-</div>
-
 export default Home;
