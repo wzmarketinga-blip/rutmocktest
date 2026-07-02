@@ -225,18 +225,45 @@ const handleSubmit = () => {
       />
     </div>
   );
-}
-
-
-<div style={{
+}<div style={{
   position: "fixed",
-  bottom: "10px",
+  bottom: "12px",
+  left: "0",
   width: "100%",
   textAlign: "center",
-  color: "white",
-  fontSize: "14px",
-  opacity: 0.7
+  zIndex: 9999,
+  pointerEvents: "none"
 }}>
-  Build by RUT Agency (Abhishek Kumar)
+  <span style={{
+    display: "inline-block",
+    padding: "8px 16px",
+    borderRadius: "20px",
+    background: "rgba(0,0,0,0.6)",
+    color: "#facc15",
+    fontWeight: "bold",
+    fontSize: "14px",
+    letterSpacing: "1px",
+    animation: "floatUpDown 2s ease-in-out infinite, glow 1.5s ease-in-out infinite"
+  }}>
+    🚀 Build by RUT Agency (Abhishek Kumar)
+  </span>
+
+  <style>{`
+    @keyframes floatUpDown {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 5px #facc15; }
+      50% { box-shadow: 0 0 20px #facc15; }
+      100% { box-shadow: 0 0 5px #facc15; }
+    }
+  `}</style>
 </div>
+
+
+
+
 export default MockTest;
