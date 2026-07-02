@@ -12,10 +12,11 @@ const PASSWORD_API =
 
 const startMock = async () => {
   try {
-    const res = await fetch(PASSWORD_API);
-    const data = await res.json();
+   const res = await fetch(PASSWORD_API);
+const data = await res.json();
 
     console.log("API RESPONSE:", data);
+alert(JSON.stringify(data));
 
     const serverPassword = String(data?.password || "")
       .trim()
