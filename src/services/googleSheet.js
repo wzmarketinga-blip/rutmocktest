@@ -7,9 +7,16 @@ export async function getQuestions() {
 
   return data.map((q) => ({
     id: q.ID,
-    subject: q.Subject,
-    question: q.Question,
-    options: [q.A, q.B, q.C, q.D],
-    answer: q.Answer,
+    subject: (q.Subject || "").trim(),
+    question: (q.Question || "").trim(),
+
+    options: [
+      (q.A || "").trim(),
+      (q.B || "").trim(),
+      (q.C || "").trim(),
+      (q.D || "").trim(),
+    ],
+
+    answer: (q.Answer || "").trim().toUpperCase(),
   }));
 }

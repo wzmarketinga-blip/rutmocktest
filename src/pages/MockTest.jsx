@@ -102,13 +102,14 @@ function MockTest() {
 
   const q = questions[currentQuestion];
 
-  const handleSubmit = () => {
+const handleSubmit = () => {
   let score = 0;
 
   questions.forEach((question, index) => {
+    // Sheet me Answer A/B/C/D hai usko actual option me convert karo
     let correctAnswer = "";
 
-    switch (question.answer) {
+    switch ((question.answer || "").trim()) {
       case "A":
         correctAnswer = question.options[0];
         break;
@@ -129,7 +130,10 @@ function MockTest() {
         correctAnswer = question.answer;
     }
 
-    if (answers[index] === correctAnswer) {
+    // Extra spaces hata do
+    const userAnswer = (answers[index] || "").trim();
+
+    if (userAnswer === correctAnswer) {
       score++;
     }
   });
@@ -143,42 +147,6 @@ function MockTest() {
     },
   });
 };
-
- questions.forEach((question, index) => {
-  let correctOption = "";
-
-  switch (question.answer) {
-    case "A":
-      correctOption = question.optionA;
-      break;
-    case "B":
-      correctOption = question.optionB;
-      break;
-    case "C":
-      correctOption = question.optionC;
-      break;
-    case "D":
-      correctOption = question.optionD;
-      break;
-    default:
-      correctOption = question.answer;
-  }
-
-  if (answers[index] === correctOption) {
-    score++;
-  }
-});
-
-  navigate("/result", {
-    state: {
-      score,
-      total: questions.length,
-      questions,
-      answers,
-    },
-  });
-};
-
   return (
     <div
       style={{
