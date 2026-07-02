@@ -226,5 +226,16 @@ const handleSubmit = () => {
     </div>
   );
 }
+<div style={{
+  position: "fixed",
+  bottom: "10px",
+  width: "100%",
+  textAlign: "center",
+  color: "white",
+  fontSize: "14px",
+  opacity: 0.7
+}}>
+  Build by RUT Agency (Abhishek Kumar)
+</div>
 
 export default MockTest;
