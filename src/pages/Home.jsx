@@ -7,8 +7,8 @@ function Home() {
   const [subject, setSubject] = useState("Computer");
   const [password, setPassword] = useState("");
 
-  const PASSWORD_API =
-  "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnSaT5jhbOl9jHBrJoBE_YMlVairz-XHfCM95VjDXgHHPfpuYc9yXSml9TmkCFx2zxQYnJNsRhZFKTZoa853qdTCmXBzNrYh6fepxE8hb6xKtJVkY2fSGvuAWONRSSwLGQ3FcrX2ms0kmkryTptKO49T--OQPTV-oaicaBf_6vdNdMrNn2gB1QjY7Do5WTtY2Xa3nMUP_xdGM6GozhAf_QtcxAk2zPyyjjrMYSOUr5W1Y3HsRl93jFlVwG2-k1KAzFAZEiDl-QH2l68u5T8iU5x-G9Y72oGWZ_zEZpXENvGSx4LJHAY&lib=Mvo2jxYrfX3XUZ-OiYuUhmHTbuO4E8RXv";
+const PASSWORD_API =
+  "https://script.google.com/macros/s/AKfycbwT93_uEIy_OnI7FRiU-9L1v9lajiiGT5WDFU-0qG4XcEHAINDQ8Nu0jKQ1g_y3heZDrQ/exec";
 
   const startMock = async () => {
     try {
