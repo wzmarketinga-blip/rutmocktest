@@ -106,10 +106,68 @@ function MockTest() {
   let score = 0;
 
   questions.forEach((question, index) => {
-    if (answers[index] === question.answer) {
+    let correctAnswer = "";
+
+    switch (question.answer) {
+      case "A":
+        correctAnswer = question.options[0];
+        break;
+
+      case "B":
+        correctAnswer = question.options[1];
+        break;
+
+      case "C":
+        correctAnswer = question.options[2];
+        break;
+
+      case "D":
+        correctAnswer = question.options[3];
+        break;
+
+      default:
+        correctAnswer = question.answer;
+    }
+
+    if (answers[index] === correctAnswer) {
       score++;
     }
   });
+
+  navigate("/result", {
+    state: {
+      score,
+      total: questions.length,
+      questions,
+      answers,
+    },
+  });
+};
+
+ questions.forEach((question, index) => {
+  let correctOption = "";
+
+  switch (question.answer) {
+    case "A":
+      correctOption = question.optionA;
+      break;
+    case "B":
+      correctOption = question.optionB;
+      break;
+    case "C":
+      correctOption = question.optionC;
+      break;
+    case "D":
+      correctOption = question.optionD;
+      break;
+    default:
+      correctOption = question.answer;
+  }
+
+  if (answers[index] === correctOption) {
+    score++;
+  }
+});
 
   navigate("/result", {
     state: {

@@ -1,14 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 
 function Result() {
-
-  console.log("NEW RESULT PAGE");
-  console.log("NEW RESULT PAGE LOADED");
   const navigate = useNavigate();
   const location = useLocation();
-   console.log("RESULT PAGE LOADED");
-  console.log(location.state);
-  console.log(location.state);
 
   const score = location.state?.score || 0;
   const total = location.state?.total || 0;
@@ -21,6 +15,22 @@ function Result() {
   const skipped = total - attempted;
   const percentage =
     total > 0 ? ((score / total) * 100).toFixed(2) : 0;
+
+  // A/B/C/D ko actual option me convert karega
+  const getCorrectAnswer = (q) => {
+    switch (q.answer) {
+      case "A":
+        return q.options[0];
+      case "B":
+        return q.options[1];
+      case "C":
+        return q.options[2];
+      case "D":
+        return q.options[3];
+      default:
+        return q.answer;
+    }
+  };
 
   return (
     <div
@@ -68,7 +78,8 @@ function Result() {
 
         {questions.map((q, index) => {
           const userAnswer = answers[index];
-          const isCorrect = userAnswer === q.answer;
+          const correctAnswer = getCorrectAnswer(q);
+          const isCorrect = userAnswer === correctAnswer;
 
           return (
             <div
@@ -105,25 +116,25 @@ function Result() {
                 <strong>Correct Answer : </strong>
 
                 <span style={{ color: "lightgreen" }}>
-                  {q.answer}
+                  {correctAnswer}
                 </span>
               </p>
 
-              {!isCorrect && userAnswer && (
-                <p style={{ color: "tomato" }}>
-                  ❌ Wrong Answer
+              {!userAnswer && (
+                <p style={{ color: "gold" }}>
+                  ⏭ Question Skipped
                 </p>
               )}
 
-              {isCorrect && (
+              {userAnswer && isCorrect && (
                 <p style={{ color: "lightgreen" }}>
                   ✅ Correct Answer
                 </p>
               )}
 
-              {!userAnswer && (
-                <p style={{ color: "gold" }}>
-                  ⏭ Question Skipped
+              {userAnswer && !isCorrect && (
+                <p style={{ color: "tomato" }}>
+                  ❌ Wrong Answer
                 </p>
               )}
             </div>
