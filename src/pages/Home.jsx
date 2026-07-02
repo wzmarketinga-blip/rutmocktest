@@ -10,34 +10,45 @@ function Home() {
 const PASSWORD_API =
   "https://script.google.com/macros/s/AKfycbwT93_uEIy_OnI7FRiU-9L1v9lajiiGT5WDFU-0qG4XcEHAINDQ8Nu0jKQ1g_y3heZDrQ/exec?action=password";
 
-  const startMock = async () => {
-    try {
-const res = await fetch(PASSWORD_API);
-const data = await res.json();
+ const startMock = async () => {
+  try {
+    const res = await fetch(PASSWORD_API);
+    const data = await res.json();
 
-alert("Server Password = " + data.password);
-alert("You Entered = " + password);
+    console.log("API DATA:", data);
 
-const serverPassword = String(data.password).trim().toUpperCase();
-const userPassword = password.trim().toUpperCase();
+    const serverPassword = String(data?.password || "")
+      .trim()
+      .toUpperCase();
 
-alert(serverPassword === userPassword);
+    const userPassword = String(password || "")
+      .trim()
+      .toUpperCase();
 
-if (userPassword !== serverPassword) {
-  alert("❌ Wrong Access Password");
-  return;
-}
+    alert("Server Password = " + serverPassword);
+    alert("You Entered = " + userPassword);
 
-      navigate("/mock", {
-        state: {
-          subject,
-        },
-      });
-    } catch (err) {
-      alert("Password Server Error");
-      console.log(err);
+    alert("Match = " + (serverPassword === userPassword));
+
+    if (!serverPassword) {
+      alert("❌ Server password missing!");
+      return;
     }
-  };
+
+    if (userPassword !== serverPassword) {
+      alert("❌ Wrong Access Password");
+      return;
+    }
+
+    navigate("/mock", {
+      state: { subject },
+    });
+
+  } catch (err) {
+    alert("Password Server Error");
+    console.log(err);
+  }
+};
 
   const subjects = [
     "Computer",
