@@ -12,26 +12,16 @@ const PASSWORD_API =
 
 const startMock = async () => {
   try {
-   const res = await fetch(PASSWORD_API);
-const data = await res.json();
+    const res = await fetch(PASSWORD_API);
+    const data = await res.json();
 
     console.log("API RESPONSE:", data);
-alert(JSON.stringify(data));
 
-    const serverPassword = String(data?.password || "")
-      .trim()
-      .toUpperCase();
-
-    const userPassword = String(password || "")
-      .trim()
-      .toUpperCase();
-
-    alert("Server Password = " + serverPassword);
-    alert("You Entered = " + userPassword);
-    alert("Match = " + (serverPassword === userPassword));
+    const serverPassword = String(data?.password || "").trim().toUpperCase();
+    const userPassword = String(password || "").trim().toUpperCase();
 
     if (!serverPassword) {
-      alert("❌ Server password missing from API");
+      alert("❌ Server se password nahi aa raha (API issue)");
       return;
     }
 
@@ -40,16 +30,17 @@ alert(JSON.stringify(data));
       return;
     }
 
+    alert("✅ Password Correct!");
+
     navigate("/mock", {
       state: { subject },
     });
 
   } catch (err) {
     console.log(err);
-    alert("Password Server Error");
+    alert("❌ Server Error");
   }
 };
-
   const subjects = [
     "Computer",
     "English",
