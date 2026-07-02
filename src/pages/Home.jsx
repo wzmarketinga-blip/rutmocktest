@@ -10,12 +10,12 @@ function Home() {
 const PASSWORD_API =
   "https://script.google.com/macros/s/AKfycbwT93_uEIy_OnI7FRiU-9L1v9lajiiGT5WDFU-0qG4XcEHAINDQ8Nu0jKQ1g_y3heZDrQ/exec?action=password";
 
- const startMock = async () => {
+const startMock = async () => {
   try {
     const res = await fetch(PASSWORD_API);
     const data = await res.json();
 
-    console.log("API DATA:", data);
+    console.log("API RESPONSE:", data);
 
     const serverPassword = String(data?.password || "")
       .trim()
@@ -27,11 +27,10 @@ const PASSWORD_API =
 
     alert("Server Password = " + serverPassword);
     alert("You Entered = " + userPassword);
-
     alert("Match = " + (serverPassword === userPassword));
 
     if (!serverPassword) {
-      alert("❌ Server password missing!");
+      alert("❌ Server password missing from API");
       return;
     }
 
@@ -45,8 +44,8 @@ const PASSWORD_API =
     });
 
   } catch (err) {
-    alert("Password Server Error");
     console.log(err);
+    alert("Password Server Error");
   }
 };
 
