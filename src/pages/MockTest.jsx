@@ -103,21 +103,23 @@ function MockTest() {
   const q = questions[currentQuestion];
 
   const handleSubmit = () => {
-    let score = 0;
+  let score = 0;
 
-    questions.forEach((question, index) => {
-      if (answers[index] === question.answer) {
-        score++;
-      }
-    });
+  questions.forEach((question, index) => {
+    if (answers[index] === question.answer) {
+      score++;
+    }
+  });
 
-    navigate("/result", {
-      state: {
-        score,
-        total: questions.length,
-      },
-    });
-  };
+  navigate("/result", {
+    state: {
+      score,
+      total: questions.length,
+      questions,
+      answers,
+    },
+  });
+};
 
   return (
     <div
