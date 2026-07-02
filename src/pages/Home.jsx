@@ -12,13 +12,13 @@ const PASSWORD_API =
 
   const startMock = async () => {
     try {
-      const res = await fetch(PASSWORD_API);
+     const res = await fetch(PASSWORD_API);
 const data = await res.json();
 
-console.log("Entered Password =", password);
-console.log("API Password =", data.password);
+const serverPassword = String(data.password).trim().toUpperCase();
+const userPassword = password.trim().toUpperCase();
 
-if (password.trim() !== String(data.password).trim()) {
+if (userPassword !== serverPassword) {
   alert("❌ Wrong Access Password");
   return;
 }
