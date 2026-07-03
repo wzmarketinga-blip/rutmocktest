@@ -7,154 +7,178 @@ function Home() {
   const [subject, setSubject] = useState("Computer");
   const [password, setPassword] = useState("");
 
-const PASSWORD_API =
-  "https://script.google.com/macros/s/AKfycbwT93_uEIy_OnI7FRiU-9L1v9lajiiGT5WDFU-0qG4XcEHAINDQ8Nu0jKQ1g_y3heZDrQ/exec?action=password";
+  const PASSWORD_API =
+    "https://script.google.com/macros/s/AKfycbwT93_uEIy_OnI7FRiU-9L1v9lajiiGT5WDFU-0qG4XcEHAINDQ8Nu0jKQ1g_y3heZDrQ/exec?action=password";
 
-const startMock = async () => {
-  try {
-    const res = await fetch(PASSWORD_API);
-    const data = await res.json();
+  const startMock = async () => {
+    try {
+      const res = await fetch(PASSWORD_API);
+      const data = await res.json();
 
-    console.log("API RESPONSE:", data);
+      console.log("API RESPONSE:", data);
 
-    const serverPassword = String(data?.password || "").trim().toUpperCase();
-    const userPassword = String(password || "").trim().toUpperCase();
+      const serverPassword = String(data?.password || "")
+        .trim()
+        .toUpperCase();
+      const userPassword = String(password || "")
+        .trim()
+        .toUpperCase();
 
-    if (!serverPassword) {
-      alert("❌ Server se password nahi aa raha (API issue)");
-      return;
+      if (!serverPassword) {
+        alert("❌ Server se password nahi aa raha (API issue)");
+        return;
+      }
+
+      if (userPassword !== serverPassword) {
+        alert("❌ Wrong Access Password");
+        return;
+      }
+
+      navigate("/mock", {
+        state: { subject },
+      });
+    } catch (err) {
+      console.log(err);
+      alert("❌ Server Error");
     }
+  };
 
-    if (userPassword !== serverPassword) {
-      alert("❌ Wrong Access Password");
-      return;
-    }
-
-    alert("✅ Password Correct!");
-
-    navigate("/mock", {
-      state: { subject },
-    });
-
-  } catch (err) {
-    console.log(err);
-    alert("❌ Server Error");
-  }
-};
   const subjects = [
-  "Computer",
-  "English",
-  "Reasoning",
-  "Math",
-  "GK",
-  "Mixed",
-];
+    "Computer",
+    "English",
+    "Reasoning",
+    "Math",
+    "GK",
+    "Mixed",
+  ];
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#0f172a",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        color: "white",
-      }}
-    >
+    <>
+      {/* Top Moving Banner */}
       <div
         style={{
-          width: "500px",
-          background: "#1e293b",
-          padding: "30px",
-          borderRadius: "15px",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          background: "#ffcc00",
+          color: "#000",
+          padding: "10px 0",
+          fontWeight: "bold",
+          fontSize: "18px",
+          zIndex: 9999,
         }}
       >
-        <h1 style={{ textAlign: "center" }}>
-          🏛 PHC MOCK PORTAL
-        </h1>
+        <marquee scrollAmount="6">
+          🏛 Welcome to PHC Mock Test Portal | 📚 Practice Daily • Improve Accuracy • Crack PHC Exam | ⏱ 40 Minutes • 50 Questions | 🚀 Developed by RUT Agency (Raunak Kumar)
+        </marquee>
+      </div>
 
-        <hr />
-
-        <h3>Select Subject</h3>
-
-        <select
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#0f172a",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "white",
+        }}
+      >
+        <div
           style={{
-            width: "100%",
-            padding: "12px",
-            fontSize: "18px",
-            marginTop: "10px",
-            borderRadius: "8px",
+            width: "500px",
+            marginTop: "70px",
+            background: "#1e293b",
+            padding: "30px",
+            borderRadius: "15px",
           }}
         >
-          {subjects.map((item) => (
-            <option key={item}>{item}</option>
-          ))}
-        </select>
+          <h1 style={{ textAlign: "center" }}>
+            🏛 PHC MOCK PORTAL
+          </h1>
 
-        <div style={{ marginTop: "20px" }}>
-          <h3>Access Password</h3>
+          <hr />
 
-          <input
-            type="password"
-            placeholder="Enter Access Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+          <h3>Select Subject</h3>
+
+          <select
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
             style={{
               width: "100%",
               padding: "12px",
               fontSize: "18px",
+              marginTop: "10px",
               borderRadius: "8px",
-              border: "none",
-            }}
-          />
-
-          <p
-            style={{
-              marginTop: "12px",
-              color: "#facc15",
-              fontSize: "14px",
-              lineHeight: "22px",
             }}
           >
-            🔐 For Password Access Request
-            <br />
-            Message on WhatsApp
-            <br />
-            <b>+91 9135199189</b>
-          </p>
+            {subjects.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+
+          <div style={{ marginTop: "20px" }}>
+            <h3>Access Password</h3>
+
+            <input
+              type="password"
+              placeholder="Enter Access Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "12px",
+                fontSize: "18px",
+                borderRadius: "8px",
+                border: "none",
+              }}
+            />
+
+            <p
+              style={{
+                marginTop: "12px",
+                color: "#facc15",
+                fontSize: "14px",
+                lineHeight: "22px",
+              }}
+            >
+              🔐 For Password Access Request
+              <br />
+              Message on WhatsApp
+              <br />
+              <b>+91 9135199189</b>
+            </p>
+          </div>
+
+          <div style={{ marginTop: "20px" }}>
+            <h3>Exam Pattern</h3>
+
+            <p>✅ 50 Questions</p>
+            <p>✅ 40 Minutes</p>
+            <p>✅ Random Questions</p>
+            <p>✅ Instant Result</p>
+          </div>
+
+          <button
+            onClick={startMock}
+            style={{
+              width: "100%",
+              marginTop: "25px",
+              padding: "15px",
+              fontSize: "20px",
+              background: "#2563eb",
+              color: "white",
+              border: "none",
+              borderRadius: "10px",
+              cursor: "pointer",
+            }}
+          >
+            🚀 Start Mock Test
+          </button>
         </div>
-
-        <div style={{ marginTop: "20px" }}>
-          <h3>Exam Pattern</h3>
-
-          <p>✅ 50 Questions</p>
-          <p>✅ 40inutes</p>
-          <p>✅ Random Questions</p>
-          <p>✅ Instant Result</p>
-        </div>
-
-        <button
-          onClick={startMock}
-          style={{
-            width: "100%",
-            marginTop: "25px",
-            padding: "15px",
-            fontSize: "20px",
-            background: "#2563eb",
-            color: "white",
-            border: "none",
-            borderRadius: "10px",
-            cursor: "pointer",
-          }}
-        >
-          🚀 Start Mock Test
-        </button>
       </div>
-    </div>
+    </>
   );
 }
-
 
 export default Home;
