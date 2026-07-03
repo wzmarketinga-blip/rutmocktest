@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function Home() {
   const navigate = useNavigate();
@@ -55,24 +57,7 @@ function Home() {
   return (
     <>
       {/* Top Moving Banner */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          background: "#ffcc00",
-          color: "#000",
-          padding: "10px 0",
-          fontWeight: "bold",
-          fontSize: "18px",
-          zIndex: 9999,
-        }}
-      >
-        <marquee scrollAmount="6">
-          🏛 Welcome to PHC Mock Test Portal | 📚 Practice Daily • Improve Accuracy • Crack PHC Exam | ⏱ 40 Minutes • 50 Questions | 🚀 Developed by RUT Agency (Raunak Kumar)
-        </marquee>
-      </div>
+     <Header />
 
       <div
         style={{
@@ -87,7 +72,7 @@ function Home() {
         <div
           style={{
             width: "500px",
-            marginTop: "70px",
+            marginTop: "120px",
             background: "#1e293b",
             padding: "30px",
             borderRadius: "15px",
@@ -177,6 +162,7 @@ function Home() {
           </button>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
