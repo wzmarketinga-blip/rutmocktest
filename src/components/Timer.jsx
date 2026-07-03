@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 
-function Timer({ onTimeUp }) {
-  const [timeLeft, setTimeLeft] = useState(40 * 60);
+function Timer({ minutes = 40, onTimeUp }) {
+  const [timeLeft, setTimeLeft] = useState(Number(minutes) * 60);
+
+  // Agar minutes change ho to timer reset ho
+  useEffect(() => {
+    setTimeLeft(Number(minutes) * 60);
+  }, [minutes]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -21,20 +26,22 @@ function Timer({ onTimeUp }) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [onTimeUp]);
 
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
 
   return (
     <h2
       style={{
         color: "#facc15",
         marginBottom: "20px",
+        fontSize: "30px",
+        fontWeight: "bold",
       }}
     >
-      ⏱ Time Left : {minutes}:{seconds < 10 ? "0" : ""}
-      {seconds}
+      ⏱ Time Left : {mins}:{secs < 10 ? "0" : ""}
+      {secs}
     </h2>
   );
 }

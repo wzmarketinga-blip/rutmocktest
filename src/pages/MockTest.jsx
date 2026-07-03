@@ -168,7 +168,10 @@ function MockTest() {
             🏛 {mode === "advanced" ? "ADVANCED MOCK TEST" : selectedSubject + " MOCK TEST"}
           </h1>
 
-          <Timer onTimeUp={handleSubmit} />
+          <Timer
+  minutes={customTime}
+  onTimeUp={handleSubmit}
+/>
 
           <h2>
             Question {currentQuestion + 1} / {questions.length}
