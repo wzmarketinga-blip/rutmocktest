@@ -57,7 +57,6 @@ function MockTest() {
       setLoading(false);
     } catch (error) {
       console.error(error);
-
       alert("Questions Load Error\n\n" + error.name + "\n" + error.message);
     }
   }
@@ -82,7 +81,6 @@ function MockTest() {
 
   const q = questions[currentQuestion];
 
-  // 🏆 Grade function
   function getGrade(percent) {
     if (percent >= 90) return "A+";
     if (percent >= 75) return "A";
@@ -90,7 +88,6 @@ function MockTest() {
     return "C";
   }
 
-  // 📊 MAIN FIXED SUBMIT LOGIC
   const handleSubmit = () => {
     let score = 0;
 
@@ -164,27 +161,35 @@ function MockTest() {
 
           <br />
 
-          <button
-            onClick={() =>
-              currentQuestion > 0 &&
-              setCurrentQuestion(currentQuestion - 1)
-            }
-          >
-            ⬅ Previous
-          </button>
+          {/* 🚀 BIG BUTTONS UI FIX */}
+          <div style={btnWrap}>
+            <button
+              onClick={() =>
+                currentQuestion > 0 &&
+                setCurrentQuestion(currentQuestion - 1)
+              }
+              style={btnStyle}
+            >
+              ⬅ Previous
+            </button>
 
-          <button
-            onClick={() =>
-              currentQuestion < questions.length - 1 &&
-              setCurrentQuestion(currentQuestion + 1)
-            }
-          >
-            Next ➡
-          </button>
+            <button
+              onClick={() =>
+                currentQuestion < questions.length - 1 &&
+                setCurrentQuestion(currentQuestion + 1)
+              }
+              style={{ ...btnStyle, background: "#0ea5e9" }}
+            >
+              Next ➡
+            </button>
 
-          <button onClick={handleSubmit}>
-            ✅ Submit Test
-          </button>
+            <button
+              onClick={handleSubmit}
+              style={{ ...btnStyle, background: "#16a34a" }}
+            >
+              ✅ Submit Test
+            </button>
+          </div>
         </div>
 
         <QuestionPalette
@@ -199,6 +204,27 @@ function MockTest() {
     </>
   );
 }
+
+/* ---------- STYLES ---------- */
+
+const btnWrap = {
+  display: "flex",
+  gap: "15px",
+  marginTop: "25px",
+  flexWrap: "wrap",
+};
+
+const btnStyle = {
+  padding: "14px 28px",
+  fontSize: "18px",
+  fontWeight: "bold",
+  borderRadius: "10px",
+  border: "none",
+  cursor: "pointer",
+  background: "#2563eb",
+  color: "white",
+  minWidth: "160px",
+};
 
 const centerStyle = {
   height: "100vh",
