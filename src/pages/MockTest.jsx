@@ -30,13 +30,7 @@ function MockTest() {
       const data = await getQuestions();
 
       if (selectedSubject === "Mixed") {
-        const subjects = [
-          "Computer",
-          "English",
-          "Reasoning",
-          "Math",
-          "GK",
-        ];
+        const subjects = ["Computer", "English", "Reasoning", "Math", "GK"];
 
         let finalQuestions = [];
 
@@ -50,7 +44,6 @@ function MockTest() {
         });
 
         finalQuestions.sort(() => Math.random() - 0.5);
-
         setQuestions(finalQuestions);
       } else {
         const filteredQuestions = data
@@ -65,12 +58,7 @@ function MockTest() {
     } catch (error) {
       console.error(error);
 
-      alert(
-        "Questions Load Error\n\n" +
-          error.name +
-          "\n" +
-          error.message
-      );
+      alert("Questions Load Error\n\n" + error.name + "\n" + error.message);
     }
   }
 
@@ -78,20 +66,7 @@ function MockTest() {
     return (
       <>
         <Header />
-        <div
-          style={{
-            height: "100vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "30px",
-            fontWeight: "bold",
-            background: "#0f172a",
-            color: "white",
-          }}
-        >
-          Loading Questions...
-        </div>
+        <div style={centerStyle}>Loading Questions...</div>
       </>
     );
   }
@@ -100,29 +75,26 @@ function MockTest() {
     return (
       <>
         <Header />
-        <div
-          style={{
-            color: "white",
-            background: "#0f172a",
-            height: "100vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "30px",
-          }}
-        >
-          No Questions Found
-        </div>
+        <div style={centerStyle}>No Questions Found</div>
       </>
     );
   }
 
   const q = questions[currentQuestion];
 
+  // 🏆 Grade function
+  function getGrade(percent) {
+    if (percent >= 90) return "A+";
+    if (percent >= 75) return "A";
+    if (percent >= 50) return "B";
+    return "C";
+  }
+
+  // 📊 MAIN FIXED SUBMIT LOGIC
   const handleSubmit = () => {
     let score = 0;
 
-    questions.forEach((question) => {
+    questions.forEach((question, index) => {
       let correctAnswer = "";
 
       switch ((question.answer || "").trim()) {
@@ -142,17 +114,23 @@ function MockTest() {
           correctAnswer = question.answer;
       }
 
-      const userAnswer = (answers[currentQuestion] || "").trim();
+      const userAnswer = (answers[index] || "").trim();
 
       if (userAnswer === correctAnswer) {
         score++;
       }
     });
 
+    const total = questions.length;
+    const percent = (score / total) * 100;
+    const grade = getGrade(percent);
+
     navigate("/result", {
       state: {
         score,
-        total: questions.length,
+        total,
+        percent: percent.toFixed(2),
+        grade,
         questions,
         answers,
       },
@@ -163,17 +141,7 @@ function MockTest() {
     <>
       <Header />
 
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#0f172a",
-          color: "white",
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "30px",
-          paddingTop: "120px",
-        }}
-      >
+      <div style={pageStyle}>
         <div style={{ width: "72%" }}>
           <h1>🏛 {selectedSubject} MOCK TEST</h1>
 
@@ -201,30 +169,11 @@ function MockTest() {
               currentQuestion > 0 &&
               setCurrentQuestion(currentQuestion - 1)
             }
-            style={{
-              padding: "12px 28px",
-              fontSize: "18px",
-              borderRadius: "10px",
-              border: "none",
-              background: "#2563eb",
-              color: "white",
-              cursor: "pointer",
-            }}
           >
             ⬅ Previous
           </button>
 
           <button
-            style={{
-              marginLeft: 20,
-              padding: "12px 28px",
-              fontSize: "18px",
-              borderRadius: "10px",
-              border: "none",
-              background: "#0ea5e9",
-              color: "white",
-              cursor: "pointer",
-            }}
             onClick={() =>
               currentQuestion < questions.length - 1 &&
               setCurrentQuestion(currentQuestion + 1)
@@ -233,20 +182,7 @@ function MockTest() {
             Next ➡
           </button>
 
-          <button
-            onClick={handleSubmit}
-            style={{
-              marginLeft: 20,
-              padding: "12px 30px",
-              fontSize: "18px",
-              borderRadius: "10px",
-              border: "none",
-              background: "#16a34a",
-              color: "white",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
+          <button onClick={handleSubmit}>
             ✅ Submit Test
           </button>
         </div>
@@ -263,5 +199,26 @@ function MockTest() {
     </>
   );
 }
+
+const centerStyle = {
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: "30px",
+  fontWeight: "bold",
+  background: "#0f172a",
+  color: "white",
+};
+
+const pageStyle = {
+  minHeight: "100vh",
+  background: "#0f172a",
+  color: "white",
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "30px",
+  paddingTop: "120px",
+};
 
 export default MockTest;
