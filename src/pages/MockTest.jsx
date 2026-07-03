@@ -32,7 +32,6 @@ function MockTest() {
       const data = await getQuestions();
       let finalQuestions = [];
 
-      // 🧠 NORMAL MOCK TEST ONLY
       if (selectedSubject === "Mixed") {
         const subjects = ["Computer", "English", "Reasoning", "Math", "GK"];
 
@@ -56,9 +55,18 @@ function MockTest() {
       setQuestions(finalQuestions);
       setLoading(false);
     } catch (error) {
-      alert("Questions Load Error");
       console.error(error);
+      alert("Questions Load Error");
     }
+  }
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div style={centerStyle}>Loading Questions...</div>
+      </>
+    );
   }
 
   const q = questions[currentQuestion];
@@ -115,15 +123,6 @@ function MockTest() {
       },
     });
   };
-
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <div style={centerStyle}>Loading Questions...</div>
-      </>
-    );
-  }
 
   return (
     <>

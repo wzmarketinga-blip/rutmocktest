@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
+
 function Timer({ minutes = 40, onTimeUp }) {
   const [timeLeft, setTimeLeft] = useState(minutes * 60);
 
   useEffect(() => {
-    setTimeLeft(minutes * 60); // 🔥 reset when prop changes
+    setTimeLeft(minutes * 60);
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -23,7 +25,7 @@ function Timer({ minutes = 40, onTimeUp }) {
 
   return (
     <h2 style={{ color: "#facc15" }}>
-      ⏱ Time Left: {m}:{s < 10 ? "0" : ""}{s}
+      ⏱ {m}:{s < 10 ? "0" : ""}{s}
     </h2>
   );
 }
