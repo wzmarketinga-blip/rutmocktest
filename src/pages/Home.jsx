@@ -129,7 +129,7 @@ const startMock = async () => {
           <h3>Exam Pattern</h3>
 
           <p>✅ 50 Questions</p>
-          <p>✅ 50 Minutes</p>
+          <p>✅ 40inutes</p>
           <p>✅ Random Questions</p>
           <p>✅ Instant Result</p>
         </div>

@@ -27,13 +27,14 @@ async function loadQuestions() {
     const data = await getQuestions();
 
     if (selectedSubject === "Mixed") {
-      const subjects = [
-        "Computer",
-        "English",
-        "Reasoning",
-        "Math",
-        "GK",
-      ];
+    const subjects = [
+  "Computer",
+  "English",
+  "Reasoning",
+  "Math",
+  "GK",
+  "Mixed",
+];
 
       let finalQuestions = [];
 
@@ -186,35 +187,59 @@ const handleSubmit = () => {
 
         <br />
 
-        <button
-          onClick={() =>
-            currentQuestion > 0 &&
-            setCurrentQuestion(currentQuestion - 1)
-          }
-        >
-          Previous
-        </button>
+       <button
+  onClick={() =>
+    currentQuestion > 0 &&
+    setCurrentQuestion(currentQuestion - 1)
+  }
+  style={{
+    padding: "12px 28px",
+    fontSize: "18px",
+    borderRadius: "10px",
+    border: "none",
+    background: "#2563eb",
+    color: "white",
+    cursor: "pointer",
+  }}
+>
+  ⬅ Previous
+</button>
 
-        <button
-          style={{ marginLeft: 20 }}
-          onClick={() =>
-            currentQuestion < questions.length - 1 &&
-            setCurrentQuestion(currentQuestion + 1)
-          }
-        >
-          Next
-        </button>
+<button
+  style={{
+    marginLeft: 20,
+    padding: "12px 28px",
+    fontSize: "18px",
+    borderRadius: "10px",
+    border: "none",
+    background: "#0ea5e9",
+    color: "white",
+    cursor: "pointer",
+  }}
+  onClick={() =>
+    currentQuestion < questions.length - 1 &&
+    setCurrentQuestion(currentQuestion + 1)
+  }
+>
+  Next ➡
+</button>
 
-        <button
-          onClick={handleSubmit}
-          style={{
-            marginLeft: 20,
-            background: "green",
-            color: "white",
-          }}
-        >
-          Submit Test
-        </button>
+<button
+  onClick={handleSubmit}
+  style={{
+    marginLeft: 20,
+    padding: "12px 30px",
+    fontSize: "18px",
+    borderRadius: "10px",
+    border: "none",
+    background: "#16a34a",
+    color: "white",
+    cursor: "pointer",
+    fontWeight: "bold",
+  }}
+>
+  ✅ Submit Test
+</button>
       </div>
 
       <QuestionPalette
@@ -225,43 +250,7 @@ const handleSubmit = () => {
       />
     </div>
   );
-}<div style={{
-  position: "fixed",
-  bottom: "12px",
-  left: "0",
-  width: "100%",
-  textAlign: "center",
-  zIndex: 9999,
-  pointerEvents: "none"
-}}>
-  <span style={{
-    display: "inline-block",
-    padding: "8px 16px",
-    borderRadius: "20px",
-    background: "rgba(0,0,0,0.6)",
-    color: "#facc15",
-    fontWeight: "bold",
-    fontSize: "14px",
-    letterSpacing: "1px",
-    animation: "floatUpDown 2s ease-in-out infinite, glow 1.5s ease-in-out infinite"
-  }}>
-    🚀 Build by RUT Agency (Abhishek Kumar)
-  </span>
 
-  <style>{`
-    @keyframes floatUpDown {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-6px); }
-      100% { transform: translateY(0px); }
-    }
-
-    @keyframes glow {
-      0% { box-shadow: 0 0 5px #facc15; }
-      50% { box-shadow: 0 0 20px #facc15; }
-      100% { box-shadow: 0 0 5px #facc15; }
-    }
-  `}</style>
-</div>
 
 
 
