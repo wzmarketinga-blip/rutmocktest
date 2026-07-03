@@ -13,7 +13,13 @@ function MockTest() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 🔥 MODE SUPPORT (NORMAL + ADVANCED)
+  const mode = location.state?.mode || "normal";
+
   const selectedSubject = location.state?.subject || "Mixed";
+  const selectedSubjects = location.state?.subjects || [];
+  const questionLimit = location.state?.questionCount || 50;
+  const customTime = location.state?.time || 40;
 
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,31 +35,48 @@ function MockTest() {
     try {
       const data = await getQuestions();
 
-      if (selectedSubject === "Mixed") {
-        const subjects = ["Computer", "English", "Reasoning", "Math", "GK"];
+      let finalQuestions = [];
 
-        let finalQuestions = [];
-
-        subjects.forEach((subject) => {
+      // 🔥 ADVANCED MODE LOGIC
+      if (mode === "advanced") {
+        selectedSubjects.forEach((subject) => {
           const subjectQuestions = data
             .filter((q) => q.subject === subject)
             .sort(() => Math.random() - 0.5)
-            .slice(0, 10);
+            .slice(0, Math.ceil(questionLimit / selectedSubjects.length));
 
           finalQuestions.push(...subjectQuestions);
         });
 
-        finalQuestions.sort(() => Math.random() - 0.5);
-        setQuestions(finalQuestions);
-      } else {
-        const filteredQuestions = data
-          .filter((q) => q.subject === selectedSubject)
+        finalQuestions = finalQuestions
           .sort(() => Math.random() - 0.5)
-          .slice(0, 50);
-
-        setQuestions(filteredQuestions);
+          .slice(0, questionLimit);
       }
 
+      // 🔥 NORMAL MODE LOGIC
+      else {
+        if (selectedSubject === "Mixed") {
+          const subjects = ["Computer", "English", "Reasoning", "Math", "GK"];
+
+          subjects.forEach((subject) => {
+            const subjectQuestions = data
+              .filter((q) => q.subject === subject)
+              .sort(() => Math.random() - 0.5)
+              .slice(0, 10);
+
+            finalQuestions.push(...subjectQuestions);
+          });
+
+          finalQuestions = finalQuestions.sort(() => Math.random() - 0.5);
+        } else {
+          finalQuestions = data
+            .filter((q) => q.subject === selectedSubject)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 50);
+        }
+      }
+
+      setQuestions(finalQuestions);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -130,6 +153,7 @@ function MockTest() {
         grade,
         questions,
         answers,
+        mode,
       },
     });
   };
@@ -140,7 +164,9 @@ function MockTest() {
 
       <div style={pageStyle}>
         <div style={{ width: "72%" }}>
-          <h1>🏛 {selectedSubject} MOCK TEST</h1>
+          <h1>
+            🏛 {mode === "advanced" ? "ADVANCED MOCK TEST" : selectedSubject + " MOCK TEST"}
+          </h1>
 
           <Timer onTimeUp={handleSubmit} />
 
@@ -159,9 +185,7 @@ function MockTest() {
             }
           />
 
-          <br />
-
-          {/* 🚀 BIG BUTTONS UI FIX */}
+          {/* 🚀 BIG BUTTON UI FIX */}
           <div style={btnWrap}>
             <button
               onClick={() =>
@@ -215,15 +239,15 @@ const btnWrap = {
 };
 
 const btnStyle = {
-  padding: "14px 28px",
-  fontSize: "18px",
+  padding: "16px 32px",   // 🔥 BIGGER BUTTON
+  fontSize: "20px",       // 🔥 BIGGER TEXT
   fontWeight: "bold",
-  borderRadius: "10px",
+  borderRadius: "12px",
   border: "none",
   cursor: "pointer",
   background: "#2563eb",
   color: "white",
-  minWidth: "160px",
+  minWidth: "180px",
 };
 
 const centerStyle = {

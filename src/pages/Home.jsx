@@ -9,25 +9,41 @@ function Home() {
   const [subject, setSubject] = useState("Computer");
   const [password, setPassword] = useState("");
 
+  // 🔥 ADVANCED STATES
+  const [isAdvanced, setIsAdvanced] = useState(false);
+  const [selectedSubjects, setSelectedSubjects] = useState(["Computer"]);
+  const [questionCount, setQuestionCount] = useState(50);
+  const [time, setTime] = useState(40);
+
   const PASSWORD_API =
     "https://script.google.com/macros/s/AKfycbwT93_uEIy_OnI7FRiU-9L1v9lajiiGT5WDFU-0qG4XcEHAINDQ8Nu0jKQ1g_y3heZDrQ/exec?action=password";
 
-  const startMock = async () => {
+  const subjects = [
+    "Computer",
+    "English",
+    "Reasoning",
+    "Math",
+    "GK",
+  ];
+
+  const toggleSubject = (sub) => {
+    if (selectedSubjects.includes(sub)) {
+      setSelectedSubjects(selectedSubjects.filter((s) => s !== sub));
+    } else {
+      setSelectedSubjects([...selectedSubjects, sub]);
+    }
+  };
+
+  const startMock = async (mode = "normal") => {
     try {
       const res = await fetch(PASSWORD_API);
       const data = await res.json();
 
-      console.log("API RESPONSE:", data);
-
-      const serverPassword = String(data?.password || "")
-        .trim()
-        .toUpperCase();
-      const userPassword = String(password || "")
-        .trim()
-        .toUpperCase();
+      const serverPassword = String(data?.password || "").trim().toUpperCase();
+      const userPassword = String(password || "").trim().toUpperCase();
 
       if (!serverPassword) {
-        alert("❌ Server se password nahi aa raha (API issue)");
+        alert("❌ Server se password nahi aa raha");
         return;
       }
 
@@ -36,28 +52,41 @@ function Home() {
         return;
       }
 
-      navigate("/mock", {
-        state: { subject },
-      });
+      // 🔥 NORMAL MODE
+      if (mode === "normal") {
+        navigate("/mock", {
+          state: {
+            subject,
+            mode: "normal",
+          },
+        });
+      }
+
+      // 🔥 ADVANCED MODE
+      else {
+        if (selectedSubjects.length === 0) {
+          alert("❌ At least 1 subject select karo");
+          return;
+        }
+
+        navigate("/mock", {
+          state: {
+            mode: "advanced",
+            subjects: selectedSubjects,
+            questionCount,
+            time,
+          },
+        });
+      }
     } catch (err) {
       console.log(err);
       alert("❌ Server Error");
     }
   };
 
-  const subjects = [
-    "Computer",
-    "English",
-    "Reasoning",
-    "Math",
-    "GK",
-    "Mixed",
-  ];
-
   return (
     <>
-      {/* Top Moving Banner */}
-     <Header />
+      <Header />
 
       <div
         style={{
@@ -71,7 +100,7 @@ function Home() {
       >
         <div
           style={{
-            width: "500px",
+            width: "520px",
             marginTop: "120px",
             background: "#1e293b",
             padding: "30px",
@@ -84,24 +113,114 @@ function Home() {
 
           <hr />
 
-          <h3>Select Subject</h3>
+          {/* MODE SWITCH */}
+          <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
+            <button
+              onClick={() => setIsAdvanced(false)}
+              style={{
+                flex: 1,
+                padding: "10px",
+                background: !isAdvanced ? "#2563eb" : "#334155",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+              }}
+            >
+              Normal Mock
+            </button>
 
-          <select
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px",
-              fontSize: "18px",
-              marginTop: "10px",
-              borderRadius: "8px",
-            }}
-          >
-            {subjects.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
+            <button
+              onClick={() => setIsAdvanced(true)}
+              style={{
+                flex: 1,
+                padding: "10px",
+                background: isAdvanced ? "#16a34a" : "#334155",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+              }}
+            >
+              Advanced Mock 🔥
+            </button>
+          </div>
 
+          {/* NORMAL MODE */}
+          {!isAdvanced && (
+            <>
+              <h3>Select Subject</h3>
+
+              <select
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  fontSize: "18px",
+                  marginTop: "10px",
+                  borderRadius: "8px",
+                }}
+              >
+                {subjects.map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </>
+          )}
+
+          {/* ADVANCED MODE */}
+          {isAdvanced && (
+            <>
+              <h3>Select Subjects (Multi Select)</h3>
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                {subjects.map((sub) => (
+                  <button
+                    key={sub}
+                    onClick={() => toggleSubject(sub)}
+                    style={{
+                      padding: "8px 12px",
+                      background: selectedSubjects.includes(sub)
+                        ? "#22c55e"
+                        : "#334155",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    {sub}
+                  </button>
+                ))}
+              </div>
+
+              <h3 style={{ marginTop: "15px" }}>
+                Questions: {questionCount}
+              </h3>
+
+              <input
+                type="range"
+                min="10"
+                max="200"
+                value={questionCount}
+                onChange={(e) => setQuestionCount(e.target.value)}
+                style={{ width: "100%" }}
+              />
+
+              <h3>Time (Minutes): {time}</h3>
+
+              <input
+                type="number"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "8px",
+                }}
+              />
+            </>
+          )}
+
+          {/* PASSWORD */}
           <div style={{ marginTop: "20px" }}>
             <h3>Access Password</h3>
 
@@ -118,50 +237,45 @@ function Home() {
                 border: "none",
               }}
             />
+          </div>
 
-            <p
+          {/* BUTTONS */}
+          {!isAdvanced ? (
+            <button
+              onClick={() => startMock("normal")}
               style={{
-                marginTop: "12px",
-                color: "#facc15",
-                fontSize: "14px",
-                lineHeight: "22px",
+                width: "100%",
+                marginTop: "25px",
+                padding: "15px",
+                fontSize: "20px",
+                background: "#2563eb",
+                color: "white",
+                border: "none",
+                borderRadius: "10px",
               }}
             >
-              🔐 For Password Access Request
-              <br />
-              Message on WhatsApp
-              <br />
-              <b>+91 9135199189</b>
-            </p>
-          </div>
-
-          <div style={{ marginTop: "20px" }}>
-            <h3>Exam Pattern</h3>
-
-            <p>✅ 50 Questions</p>
-            <p>✅ 40 Minutes</p>
-            <p>✅ Random Questions</p>
-            <p>✅ Instant Result</p>
-          </div>
-
-          <button
-            onClick={startMock}
-            style={{
-              width: "100%",
-              marginTop: "25px",
-              padding: "15px",
-              fontSize: "20px",
-              background: "#2563eb",
-              color: "white",
-              border: "none",
-              borderRadius: "10px",
-              cursor: "pointer",
-            }}
-          >
-            🚀 Start Mock Test
-          </button>
+              🚀 Start Normal Mock
+            </button>
+          ) : (
+            <button
+              onClick={() => startMock("advanced")}
+              style={{
+                width: "100%",
+                marginTop: "25px",
+                padding: "15px",
+                fontSize: "20px",
+                background: "#16a34a",
+                color: "white",
+                border: "none",
+                borderRadius: "10px",
+              }}
+            >
+              🔥 Start Advanced Mock
+            </button>
+          )}
         </div>
       </div>
+
       <Footer />
     </>
   );
