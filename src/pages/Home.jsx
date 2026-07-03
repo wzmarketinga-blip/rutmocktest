@@ -42,12 +42,13 @@ const startMock = async () => {
   }
 };
   const subjects = [
-    "Computer",
-    "English",
-    "Reasoning",
-    "GK",
-    "Mixed",
-  ];
+  "Computer",
+  "English",
+  "Reasoning",
+  "Math",
+  "GK",
+  "Mixed",
+];
 
   return (
     <div

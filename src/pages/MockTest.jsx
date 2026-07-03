@@ -27,14 +27,13 @@ async function loadQuestions() {
     const data = await getQuestions();
 
     if (selectedSubject === "Mixed") {
-  const subjects = [
+ const subjects = [
   "Computer",
   "English",
   "Reasoning",
-  "Math",
   "GK",
+  "Mixed",
 ];
-
       let finalQuestions = [];
 
       subjects.forEach((subject) => {
