@@ -31,8 +31,8 @@ async function loadQuestions() {
   "Computer",
   "English",
   "Reasoning",
+  "Math",
   "GK",
-  "Mixed",
 ];
       let finalQuestions = [];
 
