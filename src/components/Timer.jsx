@@ -1,47 +1,29 @@
-import { useEffect, useState } from "react";
-
 function Timer({ minutes = 40, onTimeUp }) {
-  const [timeLeft, setTimeLeft] = useState(Number(minutes) * 60);
-
-  // Agar minutes change ho to timer reset ho
-  useEffect(() => {
-    setTimeLeft(Number(minutes) * 60);
-  }, [minutes]);
+  const [timeLeft, setTimeLeft] = useState(minutes * 60);
 
   useEffect(() => {
+    setTimeLeft(minutes * 60); // 🔥 reset when prop changes
+
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-
-          if (onTimeUp) {
-            onTimeUp();
-          }
-
+          onTimeUp && onTimeUp();
           return 0;
         }
-
         return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [onTimeUp]);
+  }, [minutes]);
 
-  const mins = Math.floor(timeLeft / 60);
-  const secs = timeLeft % 60;
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
 
   return (
-    <h2
-      style={{
-        color: "#facc15",
-        marginBottom: "20px",
-        fontSize: "30px",
-        fontWeight: "bold",
-      }}
-    >
-      ⏱ Time Left : {mins}:{secs < 10 ? "0" : ""}
-      {secs}
+    <h2 style={{ color: "#facc15" }}>
+      ⏱ Time Left: {m}:{s < 10 ? "0" : ""}{s}
     </h2>
   );
 }

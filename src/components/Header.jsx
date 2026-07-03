@@ -1,19 +1,50 @@
+import { Link } from "react-router-dom";
+
 function Header() {
   return (
     <>
+      {/* TOP HEADER */}
       <div
         style={{
           background: "#0b3d91",
           color: "white",
-          padding: "12px",
-          textAlign: "center",
-          fontSize: "24px",
-          fontWeight: "bold",
+          padding: "12px 20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
         }}
       >
-        🏛 PHC MOCK TEST PORTAL
+        <h2 style={{ margin: 0 }}>
+          🏛 PHC MOCK TEST PORTAL
+        </h2>
+
+        <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
+          <Link
+            to="/"
+            style={{
+              color: "white",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            🏠 Home
+          </Link>
+
+          <Link
+            to="/govt-exams"
+            style={{
+              color: "#FFD700",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            🎯 Govt Exam Mock
+          </Link>
+        </div>
       </div>
 
+      {/* MOVING MARQUEE */}
       <div
         style={{
           background: "#ffcc00",
@@ -23,7 +54,10 @@ function Header() {
         }}
       >
         <marquee scrollAmount="6">
-          🏛 Welcome to PHC Mock Test Portal | 📚 Practice Daily • Improve Accuracy • Crack PHC Exam | ⏱ 40 Minutes • 50 Questions | 🚀 Developed by RUT Agency (Raunak Kumar)
+          🏛 Welcome to PHC Mock Test Portal |
+          📚 Practice Daily • Improve Accuracy • Crack Government Exams |
+          🎯 NEW: SSC • Railway • Police • Banking Mock Tests Added |
+          🚀 Developed by RUT Agency (Raunak Kumar)
         </marquee>
       </div>
     </>
