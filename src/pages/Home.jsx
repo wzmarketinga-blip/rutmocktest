@@ -60,6 +60,35 @@ function Home() {
           style={input}
         />
 
+        <div
+  style={{
+    background: "#0f172a",
+    border: "1px solid #25D366",
+    borderRadius: "8px",
+    padding: "12px",
+    marginBottom: "15px",
+    textAlign: "center",
+  }}
+>
+  <div style={{ color: "white", fontSize: "14px" }}>
+    🔐 Need Access Password?
+  </div>
+
+  <a
+    href="https://wa.me/919135199189"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{
+      color: "#25D366",
+      fontWeight: "bold",
+      fontSize: "18px",
+      textDecoration: "none",
+    }}
+  >
+    📲 WhatsApp: +91 9135199189
+  </a>
+</div>
+
         <button style={startBtn} onClick={startMock}>
           ▶ Start Mock Test
         </button>
