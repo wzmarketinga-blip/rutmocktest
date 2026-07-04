@@ -3,23 +3,26 @@ import { Link } from "react-router-dom";
 function Header() {
   return (
     <>
-      {/* TOP HEADER */}
       <div
         style={{
-          background: "#0b3d91",
+          background: "linear-gradient(90deg,#0b3d91,#1d4ed8)",
           color: "white",
-          padding: "12px 20px",
+          padding: "15px 25px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           flexWrap: "wrap",
+          position: "sticky",
+          top: 0,
+          zIndex: 1000,
+          boxShadow: "0 2px 10px rgba(0,0,0,.3)",
         }}
       >
         <h2 style={{ margin: 0 }}>
           🏛 PHC MOCK TEST PORTAL
         </h2>
 
-        <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
           <Link
             to="/"
             style={{
@@ -29,6 +32,17 @@ function Header() {
             }}
           >
             🏠 Home
+          </Link>
+
+          <Link
+            to="/leaderboard"
+            style={{
+              color: "#FFD700",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            🏆 Leaderboard
           </Link>
 
           <Link
@@ -44,7 +58,6 @@ function Header() {
         </div>
       </div>
 
-      {/* MOVING MARQUEE */}
       <div
         style={{
           background: "#ffcc00",

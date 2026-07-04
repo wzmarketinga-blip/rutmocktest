@@ -3,14 +3,23 @@ function QuestionPalette({
   currentQuestion,
   setCurrentQuestion,
   answers,
+  visited,
+  review,
 }) {
+  const answered = Object.keys(answers).length;
+  const notAnswered = questions.length - answered;
+
   return (
     <div
       style={{
-        width: "260px",
-        background: "#1e293b",
+        width: "290px",
+        background: "#111827",
         padding: "20px",
-        borderRadius: "10px",
+        borderRadius: "15px",
+        position: "sticky",
+        top: "100px",
+        height: "fit-content",
+        boxShadow: "0 0 15px rgba(0,0,0,0.4)",
       }}
     >
       <h2
@@ -30,39 +39,67 @@ function QuestionPalette({
           gap: "10px",
         }}
       >
-        {questions.map((q, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentQuestion(index)}
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "6px",
-              border: "none",
-              cursor: "pointer",
-              fontWeight: "bold",
-              color:
-                currentQuestion === index || answers[index]
-                  ? "white"
-                  : "black",
-              background:
-                currentQuestion === index
-                  ? "#2563eb"
-                  : answers[index]
-                  ? "#22c55e"
-                  : "#ffffff",
-            }}
-          >
-            {index + 1}
-          </button>
-        ))}
+        {questions.map((q, index) => {
+         let bg = "#ffffff";
+let color = "#111";
+
+if (visited[index]) {
+  bg = "#6b7280";
+  color = "white";
+}
+
+if (answers[index]) {
+  bg = "#16a34a";
+  color = "white";
+}
+
+if (review[index]) {
+  bg = "#facc15";
+  color = "black";
+}
+
+if (currentQuestion === index) {
+  bg = "#2563eb";
+  color = "white";
+}
+
+          return (
+            <button
+              key={index}
+              onClick={() => setCurrentQuestion(index)}
+              style={{
+                width: "45px",
+                height: "45px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "16px",
+                background: bg,
+                color: color,
+              }}
+            >
+              {index + 1}
+            </button>
+          );
+        })}
       </div>
 
-      <hr style={{ margin: "20px 0" }} />
+      <hr
+        style={{
+          margin: "20px 0",
+          borderColor: "#374151",
+        }}
+      />
 
-      <p style={{ color: "white" }}>🟦 Current Question</p>
-      <p style={{ color: "white" }}>🟩 Answered</p>
-      <p style={{ color: "white" }}>⬜ Not Answered</p>
+      <div style={{ color: "white", lineHeight: "30px" }}>
+  <div>🟦 Current Question</div>
+  <div>🟩 Answered : {answered}</div>
+  <div>🟨 Review : {Object.keys(review).length}</div>
+  <div>⬛ Visited : {Object.keys(visited).length}</div>
+  <div>⬜ Remaining : {notAnswered}</div>
+  <div>📚 Total : {questions.length}</div>
+</div>
     </div>
   );
 }

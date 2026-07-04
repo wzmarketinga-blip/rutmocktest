@@ -5,9 +5,10 @@ function Footer() {
         background: "#111827",
         color: "white",
         textAlign: "center",
-        padding: "15px",
+        padding: "18px",
         marginTop: "30px",
         fontSize: "15px",
+        borderTop: "3px solid #2563eb",
       }}
     >
       🚀 Developed by <b>RUT Agency (Raunak Kumar)</b>

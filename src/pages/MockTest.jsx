@@ -22,43 +22,61 @@ function MockTest() {
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
+  
+  const [visited, setVisited] = useState({});
+const [review, setReview] = useState({});
 
   useEffect(() => {
     loadQuestions();
   }, []);
 
-  async function loadQuestions() {
-    try {
-      const data = await getQuestions();
-      let finalQuestions = [];
+ async function loadQuestions() {
+  try {
+    const data = await getQuestions();
 
-      if (selectedSubject === "Mixed") {
-        const subjects = ["Computer", "English", "Reasoning", "Math", "GK"];
+    let finalQuestions = [];
 
-        subjects.forEach((subject) => {
-          const subjectQuestions = data
-            .filter((q) => q.subject === subject)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 10);
+    if (selectedSubject === "Mixed") {
 
-          finalQuestions.push(...subjectQuestions);
-        });
+      finalQuestions = [...data]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, questionLimit);
 
-        finalQuestions = finalQuestions.sort(() => Math.random() - 0.5);
-      } else {
-        finalQuestions = data
-          .filter((q) => q.subject === selectedSubject)
-          .sort(() => Math.random() - 0.5)
-          .slice(0, questionLimit);
-      }
+    } else {
 
-      setQuestions(finalQuestions);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      alert("Questions Load Error");
+      finalQuestions = data
+        .filter(
+          (q) =>
+            q.subject.toLowerCase() ===
+            selectedSubject.toLowerCase()
+        )
+        .sort(() => Math.random() - 0.5)
+        .slice(0, questionLimit);
+
     }
+
+    setQuestions(finalQuestions);
+    setLoading(false);
+
+  } catch (err) {
+
+    console.log(err);
+
+    alert("Unable to Load Questions");
+
   }
+}
+useEffect(() => {
+
+   setVisited((prev)=>({
+
+      ...prev,
+
+      [currentQuestion]:true
+
+   }));
+
+},[currentQuestion]);
 
   if (loading) {
     return (
@@ -77,53 +95,78 @@ function MockTest() {
     if (percent >= 50) return "B";
     return "C";
   }
+const handleSubmit = () => {
 
-  const handleSubmit = () => {
-    let score = 0;
+  let score = 0;
+  let correct = 0;
+  let wrong = 0;
+  let skipped = 0;
 
-    questions.forEach((question, index) => {
-      let correctAnswer = "";
+  questions.forEach((question, index) => {
 
-      switch ((question.answer || "").trim()) {
-        case "A":
-          correctAnswer = question.options[0];
-          break;
-        case "B":
-          correctAnswer = question.options[1];
-          break;
-        case "C":
-          correctAnswer = question.options[2];
-          break;
-        case "D":
-          correctAnswer = question.options[3];
-          break;
-        default:
-          correctAnswer = question.answer;
-      }
+    let correctAnswer = "";
 
-      const userAnswer = (answers[index] || "").trim();
+    switch ((question.answer || "").trim()) {
+      case "A":
+        correctAnswer = question.options[0];
+        break;
 
-      if (userAnswer === correctAnswer) {
-        score++;
-      }
-    });
+      case "B":
+        correctAnswer = question.options[1];
+        break;
 
-    const total = questions.length;
-    const percent = (score / total) * 100;
-    const grade = getGrade(percent);
+      case "C":
+        correctAnswer = question.options[2];
+        break;
 
-    navigate("/result", {
-      state: {
-        score,
-        total,
-        percent: percent.toFixed(2),
-        grade,
-        questions,
-        answers,
-      },
-    });
-  };
+      case "D":
+        correctAnswer = question.options[3];
+        break;
 
+      default:
+        correctAnswer = question.answer;
+    }
+
+    const userAnswer = (answers[index] || "").trim();
+
+    if (userAnswer === "") {
+      skipped++;
+    } 
+    else if (userAnswer === correctAnswer) {
+      score++;
+      correct++;
+    } 
+    else {
+      wrong++;
+    }
+
+  });
+
+  const total = questions.length;
+
+  const attempted = total - skipped;
+
+  const percent = ((score / total) * 100).toFixed(2);
+
+  const grade = getGrade(percent);
+
+  navigate("/result", {
+    state: {
+      subject: selectedSubject,
+      score,
+      total,
+      correct,
+      wrong,
+      skipped,
+      attempted,
+      percent,
+      grade,
+      questions,
+      answers,
+    },
+  });
+
+};
   return (
     <>
       <Header />
@@ -141,12 +184,17 @@ function MockTest() {
           <QuestionCard
             question={q}
             selectedOption={answers[currentQuestion]}
-            setSelectedOption={(option) =>
-              setAnswers({
-                ...answers,
-                [currentQuestion]: option,
-              })
-            }
+           setSelectedOption={(option)=>{
+
+setAnswers({
+
+...answers,
+
+[currentQuestion]:option
+
+});
+
+}}
           />
 
           <div style={btnWrap}>
@@ -171,20 +219,37 @@ function MockTest() {
             </button>
 
             <button
-              onClick={handleSubmit}
-              style={{ ...btnStyle, background: "#16a34a" }}
-            >
-              ✅ Submit Test
-            </button>
+  style={{ ...btnStyle, background: "#16a34a" }}
+  onClick={() => {
+    if (window.confirm("Are you sure you want to submit the test?")) {
+      handleSubmit();
+    }
+  }}
+>
+  ✅ Submit Test
+</button>
+<button
+  style={{ ...btnStyle, background: "#f59e0b" }}
+  onClick={() =>
+    setReview({
+      ...review,
+      [currentQuestion]: true,
+    })
+  }
+>
+  ⭐ Mark for Review
+</button>
           </div>
         </div>
 
-        <QuestionPalette
-          questions={questions}
-          currentQuestion={currentQuestion}
-          setCurrentQuestion={setCurrentQuestion}
-          answers={answers}
-        />
+       <QuestionPalette
+  questions={questions}
+  currentQuestion={currentQuestion}
+  setCurrentQuestion={setCurrentQuestion}
+  answers={answers}
+  visited={visited}
+  review={review}
+/>
       </div>
 
       <Footer />

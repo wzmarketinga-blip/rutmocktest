@@ -1,78 +1,171 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getPassword } from "../services/googleSheet";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function Home() {
   const navigate = useNavigate();
 
-  const startTest = (subject) => {
-    navigate("/mock-test", {
-      state: {
-        subject: subject,
-        questionCount: 50,
-        time: 40,
-      },
-    });
+  const [subject, setSubject] = useState("Mixed");
+  const [password, setPassword] = useState("");
+
+  const startMock = async () => {
+    try {
+      const data = await getPassword();
+
+      if (password !== String(data.password)) {
+        alert("❌ Wrong Access Password");
+        return;
+      }
+
+      navigate("/mock-test", {
+        state: {
+          subject,
+          questionCount: 50,
+          time: 40,
+        },
+      });
+    } catch (e) {
+      alert("Server Error");
+    }
   };
 
-  return (
+ return (
+  <>
+    <Header />
+
     <div style={container}>
-      <h1 style={{ color: "white" }}>🧠 Mock Test App</h1>
+      <div style={card}>
+        <h1 style={title}>🧠 Mock Test Portal</h1>
 
-      <div style={box}>
-        <button style={btn} onClick={() => startTest("Mixed")}>
-          Mixed Test
+        <select
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+          style={input}
+        >
+          <option>Mixed</option>
+          <option>Computer</option>
+          <option>English</option>
+          <option>Math</option>
+          <option>Reasoning</option>
+          <option>GK</option>
+        </select>
+
+        <input
+          type="password"
+          placeholder="Access Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={input}
+        />
+
+        <button style={startBtn} onClick={startMock}>
+          ▶ Start Mock Test
         </button>
 
-        <button style={btn} onClick={() => startTest("English")}>
-          English
+        <button
+          style={advBtn}
+          onClick={() => navigate("/advanced-mock")}
+        >
+          🚀 Advanced Mock Test
         </button>
 
-        <button style={btn} onClick={() => startTest("Math")}>
-          Math
+        <button
+          style={blueBtn}
+          onClick={() => navigate("/leaderboard")}
+        >
+          🏆 Leaderboard
         </button>
 
-        <button style={btn} onClick={() => startTest("Reasoning")}>
-          Reasoning
-        </button>
-
-        <button style={btn} onClick={() => startTest("GK")}>
-          GK
-        </button>
-
-        <button style={btn} onClick={() => startTest("Computer")}>
-          Computer
+        <button
+          style={blueBtn}
+          onClick={() => navigate("/govt-exams")}
+        >
+          📚 Govt Exams
         </button>
       </div>
     </div>
-  );
+
+    <Footer />
+  </>
+);
 }
 
-/* ---------- STYLES ---------- */
-
 const container = {
-  height: "100vh",
+  minHeight: "calc(100vh - 150px)",
   background: "#0f172a",
   display: "flex",
-  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
+  padding: "30px",
+  boxSizing: "border-box",
 };
 
-const box = {
-  display: "grid",
-  gridTemplateColumns: "repeat(2, 1fr)",
-  gap: "15px",
-  marginTop: "20px",
+const card = {
+  width: "420px",
+  background: "#1e293b",
+  padding: "30px",
+  borderRadius: "15px",
+  textAlign: "center",
+  boxShadow: "0 0 20px rgba(0,0,0,.4)",
 };
 
-const btn = {
-  padding: "15px 25px",
-  fontSize: "18px",
-  fontWeight: "bold",
-  borderRadius: "10px",
+const title = {
+  color: "white",
+  marginBottom: "25px",
+};
+
+const input = {
+  width: "100%",
+  padding: "14px",
+  marginBottom: "15px",
+  borderRadius: "8px",
   border: "none",
+  fontSize: "16px",
+  boxSizing: "border-box",
+};
+
+const startBtn = {
+  width: "100%",
+  padding: "15px",
+  background: "#16a34a",
+  color: "white",
+  border: "none",
+  borderRadius: "8px",
+  fontSize: "18px",
   cursor: "pointer",
+  marginBottom: "12px",
+};
+
+const advBtn = {
+  width: "100%",
+  padding: "15px",
+  background: "#f59e0b",
+  color: "white",
+  border: "none",
+  borderRadius: "8px",
+  fontSize: "18px",
+  cursor: "pointer",
+  marginBottom: "12px",
+};
+
+const blueBtn = {
+  width: "100%",
+  padding: "15px",
   background: "#2563eb",
   color: "white",
+  border: "none",
+  borderRadius: "8px",
+  fontSize: "18px",
+  cursor: "pointer",
+  marginBottom: "12px",
+};
+
+const footer = {
+  color: "#cbd5e1",
+  marginTop: "20px",
+  fontSize: "14px",
 };
 
 export default Home;
