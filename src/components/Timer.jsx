@@ -1,19 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Timer({ minutes = 40, onTimeUp }) {
   const [timeLeft, setTimeLeft] = useState(minutes * 60);
 
+  const timerRef = useRef(null);
+  const submittedRef = useRef(false);
+
   useEffect(() => {
+    // Reset when new test starts
+    submittedRef.current = false;
     setTimeLeft(minutes * 60);
 
-    const timer = setInterval(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          clearInterval(timer);
+          clearInterval(timerRef.current);
 
-          alert("⏰ Time Over!\nTest Auto Submitted.");
+          if (!submittedRef.current) {
+            submittedRef.current = true;
 
-          if (onTimeUp) onTimeUp();
+            alert("⏰ Time Over!\nTest Auto Submitted.");
+
+            if (onTimeUp) {
+              onTimeUp();
+            }
+          }
 
           return 0;
         }
@@ -22,8 +37,12 @@ function Timer({ minutes = 40, onTimeUp }) {
       });
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [minutes, onTimeUp]);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [minutes]);
 
   const hrs = Math.floor(timeLeft / 3600);
   const mins = Math.floor((timeLeft % 3600) / 60);
