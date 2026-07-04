@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 
 import Timer from "../components/Timer";
 import QuestionCard from "../components/QuestionCard";
@@ -13,7 +13,10 @@ function MockTest() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const selectedSubject = location.state?.subject || "Mixed";
+  // ✅ SUPPORT NORMAL + ADVANCED MOCK
+  const selectedSubject = location.state?.subject;
+  const selectedSubjects = location.state?.subjects;
+
   const questionLimit = location.state?.questionCount || 50;
   const customTime = Number(location.state?.time || 40);
 
@@ -22,61 +25,69 @@ function MockTest() {
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
-  
+
   const [visited, setVisited] = useState({});
-const [review, setReview] = useState({});
+  const [review, setReview] = useState({});
+
+  // 🔐 SECURITY GUARD (IMPORTANT)
+  const isAllowed =
+    location.state?.questionCount &&
+    (location.state?.subject || location.state?.subjects);
+
+  if (!isAllowed) {
+    return <Navigate to="/" replace />;
+  }
 
   useEffect(() => {
     loadQuestions();
   }, []);
 
- async function loadQuestions() {
-  try {
-    const data = await getQuestions();
+  async function loadQuestions() {
+    try {
+      const data = await getQuestions();
 
-    let finalQuestions = [];
+      let finalQuestions = [];
 
-    if (selectedSubject === "Mixed") {
+      // ✅ ADVANCED MOCK (MULTI SUBJECT)
+      if (selectedSubjects && selectedSubjects.length > 0) {
+        finalQuestions = data
+          .filter((q) => selectedSubjects.includes(q.subject))
+          .sort(() => Math.random() - 0.5)
+          .slice(0, questionLimit);
+      }
 
-      finalQuestions = [...data]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, questionLimit);
+      // ✅ SINGLE SUBJECT
+      else if (selectedSubject && selectedSubject !== "Mixed") {
+        finalQuestions = data
+          .filter(
+            (q) =>
+              q.subject.toLowerCase() === selectedSubject.toLowerCase()
+          )
+          .sort(() => Math.random() - 0.5)
+          .slice(0, questionLimit);
+      }
 
-    } else {
+      // ✅ MIXED
+      else {
+        finalQuestions = [...data]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, questionLimit);
+      }
 
-      finalQuestions = data
-        .filter(
-          (q) =>
-            q.subject.toLowerCase() ===
-            selectedSubject.toLowerCase()
-        )
-        .sort(() => Math.random() - 0.5)
-        .slice(0, questionLimit);
-
+      setQuestions(finalQuestions);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      alert("Unable to Load Questions");
     }
-
-    setQuestions(finalQuestions);
-    setLoading(false);
-
-  } catch (err) {
-
-    console.log(err);
-
-    alert("Unable to Load Questions");
-
   }
-}
-useEffect(() => {
 
-   setVisited((prev)=>({
-
+  useEffect(() => {
+    setVisited((prev) => ({
       ...prev,
-
-      [currentQuestion]:true
-
-   }));
-
-},[currentQuestion]);
+      [currentQuestion]: true,
+    }));
+  }, [currentQuestion]);
 
   if (loading) {
     return (
@@ -95,78 +106,66 @@ useEffect(() => {
     if (percent >= 50) return "B";
     return "C";
   }
-const handleSubmit = () => {
 
-  let score = 0;
-  let correct = 0;
-  let wrong = 0;
-  let skipped = 0;
+  const handleSubmit = () => {
+    let score = 0;
+    let correct = 0;
+    let wrong = 0;
+    let skipped = 0;
 
-  questions.forEach((question, index) => {
+    questions.forEach((question, index) => {
+      let correctAnswer = "";
 
-    let correctAnswer = "";
+      switch ((question.answer || "").trim()) {
+        case "A":
+          correctAnswer = question.options[0];
+          break;
+        case "B":
+          correctAnswer = question.options[1];
+          break;
+        case "C":
+          correctAnswer = question.options[2];
+          break;
+        case "D":
+          correctAnswer = question.options[3];
+          break;
+        default:
+          correctAnswer = question.answer;
+      }
 
-    switch ((question.answer || "").trim()) {
-      case "A":
-        correctAnswer = question.options[0];
-        break;
+      const userAnswer = (answers[index] || "").trim();
 
-      case "B":
-        correctAnswer = question.options[1];
-        break;
+      if (userAnswer === "") skipped++;
+      else if (userAnswer === correctAnswer) {
+        score++;
+        correct++;
+      } else {
+        wrong++;
+      }
+    });
 
-      case "C":
-        correctAnswer = question.options[2];
-        break;
+    const total = questions.length;
+    const attempted = total - skipped;
+    const percent = ((score / total) * 100).toFixed(2);
+    const grade = getGrade(percent);
 
-      case "D":
-        correctAnswer = question.options[3];
-        break;
+    navigate("/result", {
+      state: {
+        subject: selectedSubject || selectedSubjects,
+        score,
+        total,
+        correct,
+        wrong,
+        skipped,
+        attempted,
+        percent,
+        grade,
+        questions,
+        answers,
+      },
+    });
+  };
 
-      default:
-        correctAnswer = question.answer;
-    }
-
-    const userAnswer = (answers[index] || "").trim();
-
-    if (userAnswer === "") {
-      skipped++;
-    } 
-    else if (userAnswer === correctAnswer) {
-      score++;
-      correct++;
-    } 
-    else {
-      wrong++;
-    }
-
-  });
-
-  const total = questions.length;
-
-  const attempted = total - skipped;
-
-  const percent = ((score / total) * 100).toFixed(2);
-
-  const grade = getGrade(percent);
-
-  navigate("/result", {
-    state: {
-      subject: selectedSubject,
-      score,
-      total,
-      correct,
-      wrong,
-      skipped,
-      attempted,
-      percent,
-      grade,
-      questions,
-      answers,
-    },
-  });
-
-};
   return (
     <>
       <Header />
@@ -182,15 +181,15 @@ const handleSubmit = () => {
           </h2>
 
           <QuestionCard
-  question={q}
-  selectedOption={answers[currentQuestion]}
-  setSelectedOption={(option) => {
-    setAnswers({
-      ...answers,
-      [currentQuestion]: option,
-    });
-  }}
-/>
+            question={q}
+            selectedOption={answers[currentQuestion]}
+            setSelectedOption={(option) => {
+              setAnswers({
+                ...answers,
+                [currentQuestion]: option,
+              });
+            }}
+          />
 
           <div style={btnWrap}>
             <button
@@ -214,37 +213,34 @@ const handleSubmit = () => {
             </button>
 
             <button
-  style={{ ...btnStyle, background: "#16a34a" }}
-  onClick={() => {
-    if (window.confirm("Are you sure you want to submit the test?")) {
-      handleSubmit();
-    }
-  }}
->
-  ✅ Submit Test
-</button>
-<button
-  style={{ ...btnStyle, background: "#f59e0b" }}
-  onClick={() =>
-    setReview({
-      ...review,
-      [currentQuestion]: true,
-    })
-  }
->
-  ⭐ Mark for Review
-</button>
+              style={{ ...btnStyle, background: "#16a34a" }}
+              onClick={handleSubmit}
+            >
+              ✅ Submit Test
+            </button>
+
+            <button
+              style={{ ...btnStyle, background: "#f59e0b" }}
+              onClick={() =>
+                setReview({
+                  ...review,
+                  [currentQuestion]: true,
+                })
+              }
+            >
+              ⭐ Mark for Review
+            </button>
           </div>
         </div>
 
-       <QuestionPalette
-  questions={questions}
-  currentQuestion={currentQuestion}
-  setCurrentQuestion={setCurrentQuestion}
-  answers={answers}
-  visited={visited}
-  review={review}
-/>
+        <QuestionPalette
+          questions={questions}
+          currentQuestion={currentQuestion}
+          setCurrentQuestion={setCurrentQuestion}
+          answers={answers}
+          visited={visited}
+          review={review}
+        />
       </div>
 
       <Footer />
