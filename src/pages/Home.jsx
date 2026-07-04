@@ -78,12 +78,7 @@ function Home() {
           🏆 Leaderboard
         </button>
 
-        <button
-          style={blueBtn}
-          onClick={() => navigate("/govt-exams")}
-        >
-          📚 Govt Exams
-        </button>
+      
       </div>
     </div>
 
@@ -160,12 +155,6 @@ const blueBtn = {
   fontSize: "18px",
   cursor: "pointer",
   marginBottom: "12px",
-};
-
-const footer = {
-  color: "#cbd5e1",
-  marginTop: "20px",
-  fontSize: "14px",
 };
 
 export default Home;

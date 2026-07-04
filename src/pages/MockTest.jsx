@@ -182,20 +182,15 @@ const handleSubmit = () => {
           </h2>
 
           <QuestionCard
-            question={q}
-            selectedOption={answers[currentQuestion]}
-           setSelectedOption={(option)=>{
-
-setAnswers({
-
-...answers,
-
-[currentQuestion]:option
-
-});
-
-}}
-          />
+  question={q}
+  selectedOption={answers[currentQuestion]}
+  setSelectedOption={(option) => {
+    setAnswers({
+      ...answers,
+      [currentQuestion]: option,
+    });
+  }}
+/>
 
           <div style={btnWrap}>
             <button
