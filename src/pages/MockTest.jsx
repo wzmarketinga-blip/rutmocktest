@@ -19,6 +19,12 @@ function MockTest() {
 
   const questionLimit = location.state?.questionCount || 50;
   const customTime = Number(location.state?.time || 40);
+  console.log("========== MOCK TEST DEBUG ==========");
+console.log("location.state =", location.state);
+console.log("Received Time =", location.state?.time);
+console.log("Custom Time =", customTime);
+console.log("Question Count =", questionLimit);
+console.log("=====================================");
 
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);

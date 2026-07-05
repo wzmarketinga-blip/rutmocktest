@@ -7,6 +7,11 @@ function Timer({ minutes = 40, onTimeUp }) {
   const submittedRef = useRef(false);
 
   useEffect(() => {
+    console.log("========== TIMER DEBUG ==========");
+    console.log("Minutes Received:", minutes);
+    console.log("Initial Seconds:", minutes * 60);
+    console.log("================================");
+
     // Reset when new test starts
     submittedRef.current = false;
     setTimeLeft(minutes * 60);
@@ -43,6 +48,12 @@ function Timer({ minutes = 40, onTimeUp }) {
       }
     };
   }, [minutes]);
+
+  useEffect(() => {
+    if (timeLeft % 60 === 0) {
+      console.log("Current Time Left:", timeLeft, "seconds");
+    }
+  }, [timeLeft]);
 
   const hrs = Math.floor(timeLeft / 3600);
   const mins = Math.floor((timeLeft % 3600) / 60);
